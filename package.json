@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "slick-di": "github:slickjs/slick-di",
-    "slick-model": "github:slickjs/slick-model"
+    "slick-di": "git+https://github.com/slickjs/slick-di",
+    "slick-model": "git+https://github.com/slickjs/slick-model"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
