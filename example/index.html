@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reflect-metadata/0.1.9/Reflect.min.js"></script>
+        <script src="../dist/slick.js"></script>
+    </head>
+    <body>
+        <h1 bind-attr="name"></h1>
+        <p bind-attr="description"></p>
+        <button bind-click="addTodo">Click</button>
+        <div bind-controller="Controller">
+            <h2 bind-attr="name"></h2>
+        </div>
+        <script>
+
+            class Controller {
+                constructor() {
+                    slick.bindable(this, 'name')
+
+                    this.name = "Hello";
+                }
+            }
+
+
+            class App {
+                constructor() {
+                    
+                    slick.bindable(this, 'name')
+                    slick.bindable(this, 'description')
+                    /*let m = Reflect.getOwnMetadata("bindable", this)
+                    m.on('change', () => {
+                        console.log('change')
+                    })*/
+                    this.description = "Hello"
+                    this.name = 'Hello';
+                    this.name = "Tral ala"
+                    this.age = 1
+
+                }
+
+                addTodo() {
+                    this.name = "Add toto"
+                }
+            }
+
+            
+            slick.module(App)
+            .controller(Controller)
+            
+            .create({
+                el: document.querySelector('body')
+            }).catch(e => {
+                console.log(e.error)
+            })
+        </script>
+    </body>
+</html>
