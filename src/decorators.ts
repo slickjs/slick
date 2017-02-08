@@ -4,18 +4,18 @@ import { Model } from 'slick-model';
 import {MetaKeys} from './common'
 
 
-class Bindable {
+class Bindable<T> {
     enuma
     constructor(public property:PropertyKey, private model:Model) {
         
     }
     @bind
-    set(value) {
+    set(value: T) {
         this.model.set(this.property, value);
     }
     @bind
-    get() {
-        return this.model.get(this.property)
+    get(): T {
+        return this.model.get<T>(this.property)
     }
 
     enumerable = true
@@ -59,7 +59,7 @@ export function bindable<T>(target: any, property: PropertyKey, descriptor?: Typ
         Reflect.defineMetadata(MetaKeys.bindable, store, target);
     }
     if (!descriptor) {
-        descriptor = new Bindable(property, store);
+        descriptor = new Bindable<T>(property, store);
         Object.defineProperty(target, property, descriptor);
     }
 }
