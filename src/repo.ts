@@ -1,5 +1,4 @@
 
-
 export class Repository {
     static instance = new Repository();
     entry: Map<any, any> = new Map();

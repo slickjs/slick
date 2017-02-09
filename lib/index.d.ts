@@ -4,5 +4,6 @@ export * from './decorators';
 export { Renderer, MetaKeys, Droppable } from './common';
 export { Model } from 'slick-model';
 export { Container } from './container';
-export declare function renderer<T extends Renderer>(render: new () => T): void;
-export declare function module<T>(mod: new () => T): ModuleFactory<T>;
+export * from './service/html';
+export declare function renderer<T extends Renderer>(render: new (...args) => T): void;
+export declare function module<T>(mod: new (...args) => T): ModuleFactory<T>;

@@ -15,7 +15,7 @@ class AttributeBinding implements Droppable {
     }
 
     @bind
-    onChange(o,n) {
+    onChange(_,n) {
         this.setValue(n)
     }
 
@@ -88,7 +88,7 @@ export class HtmlRenderer extends Droppable implements Renderer {
     }
 
     render(model) {
-        let names = Object.getOwnPropertyNames(model)
+        //let names = Object.getOwnPropertyNames(model)
         let binding = Reflect.getOwnMetadata(MetaKeys.bindable, model);
         
         let els = this.el.querySelectorAll(`[bind-attr]`);

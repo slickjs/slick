@@ -4,7 +4,9 @@ const gulp = require('gulp'),
     rename = require('gulp-rename'),
     tsc = require('gulp-typescript'),
     merge = require('merge2'),
-    babel = require('gulp-babel');
+    babel = require('gulp-babel'),
+    bump = require('gulp-bump'),
+    size = require('gulp-filesize');
 
 
 gulp.task('typescript', () => {
@@ -12,7 +14,7 @@ gulp.task('typescript', () => {
         declaration: true
     });
 
-    let result = gulp.src('./src/*.ts')
+    let result = gulp.src('./src/**/*.ts')
         .pipe(project());
 
 
@@ -57,15 +59,21 @@ gulp.task('webpack', () => {
 });
 
 gulp.task('uglify', ['webpack'], () => {
-    gulp.src('dist/slick.js')
+    return gulp.src('dist/slick.js')
         .pipe(uglify())
         .pipe(rename('slick.min.js'))
         .pipe(gulp.dest('dist'))
+        .pipe(size());
 })
 
 gulp.task('watch', () => {
     gulp.watch('src/**/*.ts', ['webpack']);
 });
 
+gulp.task('bump', () => {
+    return gulp.src('package.json')
+    .pipe(bump())
+    .pipe(gulp.dest('.'));
+})
 
 gulp.task('default', ['webpack', 'typescript', 'uglify']);

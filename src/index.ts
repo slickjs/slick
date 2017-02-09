@@ -6,7 +6,8 @@ import { HtmlRenderer } from './html-renderer';
 export * from './decorators';
 export { Renderer, MetaKeys, Droppable } from './common';
 export { Model } from 'slick-model';
-export {Container} from './container'
+export {Container} from './container';
+export * from './service/html';
 //const container = new Container();
 import {Repository} from './repo';
 
