@@ -11,12 +11,12 @@ export {Container} from './container'
 import {Repository} from './repo';
 
 
-export function renderer<T extends Renderer>(render: new() => T) {
+export function renderer<T extends Renderer>(render: new(...args) => T) {
     Repository.instance.register(MetaKeys.renderer, render);
 }
 
 
-export function module<T >(mod: new () => T) {
+export function module<T >(mod: new (...args) => T) {
     let child = new Container()
 
     let renderer = Repository.instance.get(MetaKeys.renderer);
