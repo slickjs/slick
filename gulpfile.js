@@ -28,7 +28,7 @@ gulp.task('typescript', () => {
 
 })
 
-gulp.task('webpack', () => {
+gulp.task('webpack', ['typescript'], () => {
 
     return gulp.src('lib/index.js')
         .pipe(webpack({

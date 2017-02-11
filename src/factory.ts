@@ -30,9 +30,9 @@ export abstract class Factory<T> {
 
         }*/
         if (options.el) {
+            this.container.registerInstance(MetaKeys.element, options.el);
             this.__registerRenderer();
         }
-
 
         try {
             instance = this.container.get(this.module)
@@ -41,8 +41,6 @@ export abstract class Factory<T> {
         }
 
         if (options && options.el) {
-
-            this.container.registerInstance(MetaKeys.element, options.el);
 
             let renderer = this.container.get<Renderer>(MetaKeys.renderer);
             renderer.render(instance, this.container);

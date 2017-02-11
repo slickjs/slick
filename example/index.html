@@ -17,17 +17,21 @@
         <script>
 
             class Controller {
-                constructor() {
+                constructor(html) {
                     slick.bindable(this, 'name')
-
+                    
                     this.name = "Hello";
                 }
             }
 
+            Controller.inject = [slick.Html]
+
 
             class App {
-                constructor() {
-                    
+                constructor(html) {
+                    for (let el of html) {
+                        console.log(el)
+                    }
                     slick.bindable(this, 'name')
                     slick.bindable(this, 'description')
                     /*let m = Reflect.getOwnMetadata("bindable", this)
@@ -45,6 +49,8 @@
                     this.name = "Add toto"
                 }
             }
+
+            App.inject = [slick.Html]
 
             
             slick.module(App)

@@ -2106,6 +2106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                 this.container.registerSingleton(MetaKeys.renderer, this._renderer);
 	             }*/
 	            if (options.el) {
+	                this.container.registerInstance(common_1.MetaKeys.element, options.el);
 	                this.__registerRenderer();
 	            }
 	            try {
@@ -2114,7 +2115,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return Promise.reject(e);
 	            }
 	            if (options && options.el) {
-	                this.container.registerInstance(common_1.MetaKeys.element, options.el);
 	                var renderer = this.container.get(common_1.MetaKeys.renderer);
 	                renderer.render(instance, this.container);
 	            }
