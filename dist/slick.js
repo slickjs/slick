@@ -70,6 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var common_2 = __webpack_require__(18);
 	exports.MetaKeys = common_2.MetaKeys;
 	exports.Droppable = common_2.Droppable;
+	exports.isDroppable = common_2.isDroppable;
 	var slick_model_1 = __webpack_require__(21);
 	exports.Model = slick_model_1.Model;
 	var container_2 = __webpack_require__(1);

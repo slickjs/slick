@@ -1,7 +1,7 @@
 import { ModuleFactory } from './module.factory';
 import { Renderer } from './common';
 export * from './decorators';
-export { Renderer, MetaKeys, Droppable } from './common';
+export { Renderer, MetaKeys, Droppable, isDroppable } from './common';
 export { Model } from 'slick-model';
 export { Container } from './container';
 export * from './service/html';
