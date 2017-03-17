@@ -10,6 +10,10 @@ export abstract class Droppable {
     abstract drop() 
 }
 
+export function isDroppable(a:any): a is Droppable {
+    return a && typeof a.drop === 'function';
+}
+
 export interface Renderer extends Droppable {
-    render(model, container:Container);
+    render(model, container:Container, options?:any);
 }

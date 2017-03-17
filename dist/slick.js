@@ -61,6 +61,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	    }
 	}
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var container_1 = __webpack_require__(1);
 	var module_factory_1 = __webpack_require__(15);
 	var common_1 = __webpack_require__(18);
@@ -125,6 +126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var di = __webpack_require__(2);
 
 	var Container = function (_di$Container) {
@@ -1195,14 +1197,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	function load() {
+	  var r;
 	  try {
-	    return exports.storage.debug;
+	    r = exports.storage.debug;
 	  } catch (e) {}
 
 	  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-	  if (typeof process !== 'undefined' && 'env' in process) {
-	    return process.env.DEBUG;
+	  if (!r && typeof process !== 'undefined' && 'env' in process) {
+	    r = process.env.DEBUG;
 	  }
+
+	  return r;
 	}
 
 	/**
@@ -1428,7 +1433,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = createDebug.debug = createDebug.default = createDebug;
+	exports = module.exports = createDebug.debug = createDebug['default'] = createDebug;
 	exports.coerce = coerce;
 	exports.disable = disable;
 	exports.enable = enable;
@@ -1560,6 +1565,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function enable(namespaces) {
 	  exports.save(namespaces);
+
+	  exports.names = [];
+	  exports.skips = [];
 
 	  var split = (namespaces || '').split(/[\s,]+/);
 	  var len = split.length;
@@ -1967,6 +1975,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var container_1 = __webpack_require__(1);
 	var controller_factory_1 = __webpack_require__(16);
 	var factory_1 = __webpack_require__(17);
@@ -1982,11 +1991,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _createClass(ModuleFactory, [{
 	        key: "configure",
+
+	        /**
+	         * Configure a service
+	         *
+	         * @template T
+	         * @param {new (...args) => T} config
+	         * @param {(e:T) => void} fn
+	         * @returns
+	         *
+	         * @memberOf ModuleFactory
+	         */
 	        value: function configure(config, fn) {
 	            var m = this.container.get(config);
 	            fn(m);
 	            return this;
 	        }
+	        /**
+	         * Register a controller
+	         *
+	         * @template T
+	         * @param {(string | T)} name
+	         * @param {new() => T} [fn]
+	         * @returns
+	         *
+	         * @memberOf ModuleFactory
+	         */
+
 	    }, {
 	        key: "controller",
 	        value: function controller(name, fn) {
@@ -2037,6 +2068,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var factory_1 = __webpack_require__(17);
 
 	var ControllerFactory = function (_factory_1$Factory) {
@@ -2075,6 +2107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	}
 
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var common_1 = __webpack_require__(18);
 
 	var Factory = function () {
@@ -2085,6 +2118,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.module = module;
 	        this._renderer = _renderer;
 	    }
+	    /**
+	     * Override the renderer for this module or controller
+	     *
+	     * @param {new (el?: HTMLElement) => Renderer} renderer
+	     * @returns
+	     *
+	     * @memberOf Factory
+	     */
 
 	    _createClass(Factory, [{
 	        key: "renderer",
@@ -2093,18 +2134,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._renderer = _renderer2;
 	            return this;
 	        }
+	        /**
+	         * Create an instance of the module or controller
+	         *
+	         * @param {CreateOptions} [options={}]
+	         * @returns
+	         *
+	         * @memberOf Factory
+	         */
+
 	    }, {
 	        key: "create",
 	        value: function create() {
 	            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 	            var instance = void 0;
-	            /*if (options.el && this._renderer) {
-	                 if (this.container.hasHandler(MetaKeys.renderer)) {
-	                    this.container.unregister(MetaKeys.renderer);
-	                }
-	                 this.container.registerSingleton(MetaKeys.renderer, this._renderer);
-	             }*/
 	            if (options.el) {
 	                this.container.registerInstance(common_1.MetaKeys.element, options.el);
 	                this.__registerRenderer();
@@ -2115,8 +2159,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return Promise.reject(e);
 	            }
 	            if (options && options.el) {
-	                var renderer = this.container.get(common_1.MetaKeys.renderer);
-	                renderer.render(instance, this.container);
+	                if (this.container.hasHandler(common_1.MetaKeys.renderer, true)) {
+	                    var renderer = this.container.get(common_1.MetaKeys.renderer);
+	                    renderer.render(instance, this.container, options.options);
+	                    if (typeof instance.didRender === 'function') {
+	                        instance.didRender();
+	                    }
+	                }
 	            }
 	            return Promise.resolve(instance);
 	        }
@@ -2149,6 +2198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	}
 
+	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.MetaKeys = {
 	    bindable: Symbol.for('bindable'),
 	    renderer: Symbol.for('renderer'),
@@ -2160,6 +2210,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.Droppable = Droppable;
+	function isDroppable(a) {
+	    return a && typeof a.drop === 'function';
+	}
+	exports.isDroppable = isDroppable;
 
 /***/ },
 /* 19 */
@@ -2224,6 +2278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __metadata = undefined && undefined.__metadata || function (k, v) {
 	    if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var common_1 = __webpack_require__(18);
 	var decorators_1 = __webpack_require__(20);
 	var container_1 = __webpack_require__(1);
@@ -2265,7 +2320,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            if (value == null) {
 	                value = "";
-	            } else {}
+	            } else {
+	                //clearInterval(this._autocompleteCheckInterval);
+	            }
 	            if (isRadioOrCheckbox) {
 	                if (isRadio) {
 	                    if (String(value) === String(node.value)) {
@@ -2562,6 +2619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	    }
 	}
+	Object.defineProperty(exports, "__esModule", { value: true });
 	__export(__webpack_require__(13));
 	var slick_model_1 = __webpack_require__(21);
 	var common_1 = __webpack_require__(18);
@@ -3281,18 +3339,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	        Object.defineProperty(target, prop, descriptor);
 	    } else if (descriptor.set) {
-	        (function () {
-	            var oSet = descriptor.set;
-	            descriptor.set = function $observableSet(value) {
-	                var old = this[prop];
-	                if (equal_1.equal(old, value)) {
-	                    return;
-	                }
-	                oSet(value);
-	                this.trigger("change:" + prop, old, value);
-	                this.trigger('change', _defineProperty({}, prop, value));
-	            };
-	        })();
+	        var oSet = descriptor.set;
+	        descriptor.set = function $observableSet(value) {
+	            var old = this[prop];
+	            if (equal_1.equal(old, value)) {
+	                return;
+	            }
+	            oSet(value);
+	            this.trigger("change:" + prop, old, value);
+	            this.trigger('change', _defineProperty({}, prop, value));
+	        };
 	    }
 	}
 	exports.observable = observable;
@@ -3327,16 +3383,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	        Object.defineProperty(target, propertyKey, descriptor);
 	    } else if (descriptor.set) {
-	        (function () {
-	            var set = descriptor.set;
-	            descriptor.set = function $validateSet(value) {
-	                var type = Reflect.getMetadata("design:type", target, propertyKey);
-	                if (!validator(type, value)) {
-	                    throw new TypeError("Invalid type.");
-	                }
-	                set(value);
-	            };
-	        })();
+	        var set = descriptor.set;
+	        descriptor.set = function $validateSet(value) {
+	            var type = Reflect.getMetadata("design:type", target, propertyKey);
+	            if (!validator(type, value)) {
+	                throw new TypeError("Invalid type.");
+	            }
+	            set(value);
+	        };
 	    }
 	}
 	exports.validate = validate;
@@ -3384,6 +3438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __metadata = undefined && undefined.__metadata || function (k, v) {
 	    if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var slick_di_1 = __webpack_require__(2);
 	var common_1 = __webpack_require__(18);
 	var dom = __webpack_require__(29);
@@ -4862,6 +4917,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw new TypeError("Cannot call a class as a function");
 	    }
 	}
+
+	Object.defineProperty(exports, "__esModule", { value: true });
 
 	var Repository = function () {
 	    function Repository() {

@@ -7,6 +7,7 @@ export declare const MetaKeys: {
 export declare abstract class Droppable {
     abstract drop(): any;
 }
+export declare function isDroppable(a: any): a is Droppable;
 export interface Renderer extends Droppable {
-    render(model: any, container: Container): any;
+    render(model: any, container: Container, options?: any): any;
 }

@@ -5,13 +5,33 @@ import {Factory} from './factory'
 
 export class ModuleFactory<T> extends Factory<T> {
 
-    configure<T>(config: new (...args) => T, fn:(e:T) => void) {
+    /**
+     * Configure a service
+     * 
+     * @template T 
+     * @param {new (...args) => T} config 
+     * @param {(e:T) => void} fn 
+     * @returns 
+     * 
+     * @memberOf ModuleFactory
+     */
+    public configure<T>(config: new (...args) => T, fn:(e:T) => void) {
         let m = this.container.get<T>(config)
         fn(m)
         return this;
     } 
 
-    controller<T>(name: string | T, fn?:  new() => T) {
+    /**
+     * Register a controller
+     * 
+     * @template T 
+     * @param {(string | T)} name 
+     * @param {new() => T} [fn] 
+     * @returns 
+     * 
+     * @memberOf ModuleFactory
+     */
+    public controller<T>(name: string | T, fn?:  new() => T) {
 
         if (arguments.length === 1 && typeof name !== 'function') {
             throw new TypeError("");
