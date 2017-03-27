@@ -59,6 +59,9 @@ export abstract class Factory<T> {
         let instance
 
         if (options.el) {
+            if (container.hasHandler(MetaKeys.element, false)) {
+                container.unregister(MetaKeys.element);
+            }
             container.registerInstance(MetaKeys.element, options.el);
             this.__registerRenderer(container);
         }
