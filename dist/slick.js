@@ -1339,37 +1339,59 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
 	function _classCallCheck(instance, Constructor) {
-	  if (!(instance instanceof Constructor)) {
-	    throw new TypeError("Cannot call a class as a function");
-	  }
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError("Cannot call a class as a function");
+	    }
 	}
 
 	function _possibleConstructorReturn(self, call) {
-	  if (!self) {
-	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-	  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	    if (!self) {
+	        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
 	}
 
 	function _inherits(subClass, superClass) {
-	  if (typeof superClass !== "function" && superClass !== null) {
-	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
-	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	    if (typeof superClass !== "function" && superClass !== null) {
+	        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
 	Object.defineProperty(exports, "__esModule", { value: true });
+	var slick_di_1 = __webpack_require__(2);
 	var factory_1 = __webpack_require__(13);
 
 	var ControllerFactory = function (_factory_1$Factory) {
-	  _inherits(ControllerFactory, _factory_1$Factory);
+	    _inherits(ControllerFactory, _factory_1$Factory);
 
-	  function ControllerFactory() {
-	    _classCallCheck(this, ControllerFactory);
+	    function ControllerFactory(container, module, renderer) {
+	        _classCallCheck(this, ControllerFactory);
 
-	    return _possibleConstructorReturn(this, (ControllerFactory.__proto__ || Object.getPrototypeOf(ControllerFactory)).apply(this, arguments));
-	  }
+	        // Register the controller as transient (default is singleton)
+	        var _this = _possibleConstructorReturn(this, (ControllerFactory.__proto__ || Object.getPrototypeOf(ControllerFactory)).call(this, container, module, renderer));
 
-	  return ControllerFactory;
+	        slick_di_1.transient()(module);
+	        return _this;
+	    }
+
+	    _createClass(ControllerFactory, [{
+	        key: "create",
+	        value: function create(options) {
+	            return this._create(this.container.createChild(false), options);
+	        }
+	    }]);
+
+	    return ControllerFactory;
 	}(factory_1.Factory);
 
 	exports.ControllerFactory = ControllerFactory;
@@ -1437,19 +1459,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function create() {
 	            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+	            return this._create(this.container, options);
+	        }
+	    }, {
+	        key: "_create",
+	        value: function _create(container) {
+	            var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
 	            var instance = void 0;
 	            if (options.el) {
-	                this.container.registerInstance(common_1.MetaKeys.element, options.el);
-	                this.__registerRenderer();
+	                container.registerInstance(common_1.MetaKeys.element, options.el);
+	                this.__registerRenderer(container);
 	            }
 	            try {
-	                instance = this.container.get(this.module);
+	                instance = container.get(this.module);
 	            } catch (e) {
 	                return Promise.reject(e);
 	            }
 	            if (options && options.el) {
-	                if (this.container.hasHandler(common_1.MetaKeys.renderer, true)) {
-	                    var renderer = this.container.get(common_1.MetaKeys.renderer);
+	                if (container.hasHandler(common_1.MetaKeys.renderer, true)) {
+	                    var renderer = container.get(common_1.MetaKeys.renderer);
 	                    renderer.render(instance, this.container, options.options);
 	                    if (typeof instance.didRender === 'function') {
 	                        instance.didRender();
@@ -1460,12 +1489,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: "__registerRenderer",
-	        value: function __registerRenderer() {
+	        value: function __registerRenderer(container) {
 	            if (this._renderer) {
-	                if (this.container.hasHandler(common_1.MetaKeys.renderer)) {
-	                    this.container.unregister(common_1.MetaKeys.renderer);
+	                if (container.hasHandler(common_1.MetaKeys.renderer)) {
+	                    container.unregister(common_1.MetaKeys.renderer);
 	                }
-	                this.container.registerTransient(common_1.MetaKeys.renderer, this._renderer);
+	                container.registerTransient(common_1.MetaKeys.renderer, this._renderer);
 	            }
 	        }
 	    }]);

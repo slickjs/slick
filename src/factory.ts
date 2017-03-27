@@ -52,22 +52,26 @@ export abstract class Factory<T> {
      * @memberOf Factory
      */
     public create(options: CreateOptions = {}) {
+        return this._create(this.container, options);
+    }
+
+    protected _create(container:Container, options:CreateOptions = {}) {
         let instance
 
         if (options.el) {
-            this.container.registerInstance(MetaKeys.element, options.el);
-            this.__registerRenderer();
+            container.registerInstance(MetaKeys.element, options.el);
+            this.__registerRenderer(container);
         }
 
         try {
-            instance = this.container.get(this.module)
+            instance = container.get(this.module)
         } catch (e) {
             return Promise.reject(e)
         }
 
         if (options && options.el) {
-            if (this.container.hasHandler(MetaKeys.renderer, true)) {
-                let renderer = this.container.get<Renderer>(MetaKeys.renderer);
+            if (container.hasHandler(MetaKeys.renderer, true)) {
+                let renderer = container.get<Renderer>(MetaKeys.renderer);
                 renderer.render(instance, this.container, options.options);
                 if (typeof instance.didRender === 'function') {
                     instance.didRender();
@@ -80,12 +84,12 @@ export abstract class Factory<T> {
     }
 
 
-    private __registerRenderer() {
+    private __registerRenderer(container:Container) {
         if (this._renderer) {
-            if (this.container.hasHandler(MetaKeys.renderer)) {
-                this.container.unregister(MetaKeys.renderer);
+            if (container.hasHandler(MetaKeys.renderer)) {
+                container.unregister(MetaKeys.renderer);
             }
-            this.container.registerTransient(MetaKeys.renderer, this._renderer);
+            container.registerTransient(MetaKeys.renderer, this._renderer);
         }
     }
 }

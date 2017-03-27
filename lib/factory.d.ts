@@ -45,5 +45,6 @@ export declare abstract class Factory<T> {
      * @memberOf Factory
      */
     create(options?: CreateOptions): Promise<any>;
-    private __registerRenderer();
+    protected _create(container: Container, options?: CreateOptions): Promise<any>;
+    private __registerRenderer(container);
 }
