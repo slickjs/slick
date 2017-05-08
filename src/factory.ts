@@ -55,7 +55,7 @@ export abstract class Factory<T> {
         return this._create(this.container, options);
     }
 
-    protected _create(container:Container, options:CreateOptions = {}) {
+    protected _create(container: Container, options: CreateOptions = {}) {
         let instance
 
         if (options.el) {
@@ -73,7 +73,7 @@ export abstract class Factory<T> {
         }
 
         if (options && options.el) {
-            if (container.hasHandler(MetaKeys.renderer, true)) {
+            if (container.hasHandler(MetaKeys.renderer, false)) {
                 let renderer = container.get<Renderer>(MetaKeys.renderer);
                 renderer.render(instance, this.container, options.options);
                 if (typeof instance.didRender === 'function') {
@@ -87,11 +87,11 @@ export abstract class Factory<T> {
     }
 
 
-    private __registerRenderer(container:Container) {
+    private __registerRenderer(container: Container) {
+        if (container.hasHandler(MetaKeys.renderer, false)) {
+            container.unregister(MetaKeys.renderer);
+        }
         if (this._renderer) {
-            if (container.hasHandler(MetaKeys.renderer)) {
-                container.unregister(MetaKeys.renderer);
-            }
             container.registerTransient(MetaKeys.renderer, this._renderer);
         }
     }

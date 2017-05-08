@@ -1413,22 +1413,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var _get = function get(object, property, receiver) {
-	    if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-	        var parent = Object.getPrototypeOf(object);if (parent === null) {
-	            return undefined;
-	        } else {
-	            return get(parent, property, receiver);
-	        }
-	    } else if ("value" in desc) {
-	        return desc.value;
-	    } else {
-	        var getter = desc.get;if (getter === undefined) {
-	            return undefined;
-	        }return getter.call(receiver);
-	    }
-	};
-
 	var _createClass = function () {
 	    function defineProperties(target, props) {
 	        for (var i = 0; i < props.length; i++) {
@@ -1515,12 +1499,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(ControllerFactory, [{
 	        key: "create",
 	        value: function create() {
-	            var _this3 = this;
-
 	            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-	            return _get(ControllerFactory.prototype.__proto__ || Object.getPrototypeOf(ControllerFactory.prototype), "create", this).call(this, options).then(function (instance) {
-	                return new ControllerWrapper(_this3.container, instance);
+	            /*return super.create(options).then( instance => {
+	                return new ControllerWrapper(this.container, instance);
+	            })*/
+	            var container = this.container.createChild(false);
+	            return this._create(container, options).then(function (instance) {
+	                return new ControllerWrapper(container, instance);
 	            });
 	        }
 	    }]);
@@ -1614,7 +1600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return Promise.reject(e);
 	            }
 	            if (options && options.el) {
-	                if (container.hasHandler(common_1.MetaKeys.renderer, true)) {
+	                if (container.hasHandler(common_1.MetaKeys.renderer, false)) {
 	                    var renderer = container.get(common_1.MetaKeys.renderer);
 	                    renderer.render(instance, this.container, options.options);
 	                    if (typeof instance.didRender === 'function') {
@@ -1627,10 +1613,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "__registerRenderer",
 	        value: function __registerRenderer(container) {
+	            if (container.hasHandler(common_1.MetaKeys.renderer, false)) {
+	                container.unregister(common_1.MetaKeys.renderer);
+	            }
 	            if (this._renderer) {
-	                if (container.hasHandler(common_1.MetaKeys.renderer)) {
-	                    container.unregister(common_1.MetaKeys.renderer);
-	                }
 	                container.registerTransient(common_1.MetaKeys.renderer, this._renderer);
 	            }
 	        }

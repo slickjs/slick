@@ -38,9 +38,13 @@ export class ControllerFactory<T> extends Factory<T> {
     }
 
     create(options:CreateOptions = {}) {
-        return super.create(options).then( instance => {
+        /*return super.create(options).then( instance => {
             return new ControllerWrapper(this.container, instance);
-        })
+        })*/
+    
+        let container = this.container.createChild(false);
+        return this._create(container, options)
+        .then( instance => new ControllerWrapper(container, instance));
     }
 
 }
