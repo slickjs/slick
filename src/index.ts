@@ -8,6 +8,7 @@ export { Renderer, MetaKeys, Droppable, isDroppable } from './common';
 export { Model } from 'slick-model';
 export {Container} from './container';
 export * from './service/html';
+export * from './factory';
 //const container = new Container();
 import {Repository} from './repo';
 

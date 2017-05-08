@@ -76,6 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var container_2 = __webpack_require__(1);
 	exports.Container = container_2.Container;
 	__export(__webpack_require__(24));
+	__export(__webpack_require__(14));
 	//const container = new Container();
 	var repo_1 = __webpack_require__(29);
 	function renderer(render) {

@@ -10,5 +10,5 @@ export declare class ControllerWrapper extends Droppable {
 }
 export declare class ControllerFactory<T> extends Factory<T> {
     constructor(container: Container, module: new () => T, renderer: new () => Renderer);
-    create(options?: CreateOptions): Promise<any>;
+    create(options?: CreateOptions): Promise<ControllerWrapper>;
 }
