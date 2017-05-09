@@ -17,8 +17,12 @@ export class ControllerWrapper extends Droppable {
         if (this.container.hasHandler(MetaKeys.element,false))
             this.container.unregister(MetaKeys.element);
     
-        if (this.container.hasHandler(MetaKeys.renderer, false)) 
+        if (this.container.hasHandler(MetaKeys.renderer, false)) {
+            let renderer = this.container.get<Renderer>(MetaKeys.renderer);
+            renderer.drop();
             this.container.unregister(MetaKeys.renderer);
+        }
+            
     
         this.container.clear();
     }
